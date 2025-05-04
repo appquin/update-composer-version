@@ -1,0 +1,63 @@
+{
+  "name": "update-composer-version",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "git:push": "git push origin main --follow-tags",
+    "semantic:release": "dotenv -e .env -- cross-env semantic-release --no-ci",
+    "release": "npm run semantic:release && npm run git:push",
+    "release:dry": "dotenv -e .env -- cross-env semantic-release --no-ci --dry-run"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "aggregate-error": "^3.0.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^18.0.0",
+    "@commitlint/config-conventional": "^18.0.0",
+    "@semantic-release/changelog": "^6.0.0",
+    "@semantic-release/commit-analyzer": "^11.0.0",
+    "@semantic-release/git": "^10.0.0",
+    "@semantic-release/github": "^9.0.0",
+    "@semantic-release/release-notes-generator": "^12.0.0",
+    "cross-env": "^7.0.3",
+    "dotenv-cli": "^8.0.0",
+    "semantic-release": "^23.0.0"
+  },
+  "release": {
+    "branches": [
+      "main"
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "composer.json",
+            "CHANGELOG.md"
+          ],
+          "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+        }
+      ],
+      "@semantic-release/github"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ],
+    "rules": {
+      "subject-case": [
+        2,
+        "always",
+        [
+          "sentence-case",
+          "lower-case"
+        ]
+      ]
+    }
+  }
+}
